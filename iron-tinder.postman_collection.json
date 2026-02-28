@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Iron Tinder API",
+		"description": "Colección de Postman para probar todos los endpoints de la API de Iron Tinder, la app de citas del bootcamp de Ironhack.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api",
+			"type": "string"
+		},
+		{
+			"key": "targetUserId",
+			"value": "PASTE_USER_ID_HERE",
+			"type": "string"
+		},
+		{
+			"key": "matchId",
+			"value": "PASTE_MATCH_ID_HERE",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"description": "Endpoints de autenticación: registro, login, logout y verificación de sesión.",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"ada@ironhack.com\",\n  \"password\": \"ironhack123\",\n  \"name\": \"Ada Lovelace\",\n  \"age\": 25,\n  \"gender\": \"female\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/signup",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "signup"]
+						},
+						"description": "Registra un nuevo usuario en la aplicación. Envía email, password, nombre, edad y género. La respuesta devuelve el objeto del usuario creado SIN el campo password (verificar esto en los tests). No requiere autenticación."
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response does not contain password', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.password).to.be.undefined;",
+									"    pm.expect(jsonData).to.not.have.property('password');",
+									"});",
+									"",
+									"pm.test('Response contains user data', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('age');",
+									"    pm.expect(jsonData).to.have.property('gender');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"ada@ironhack.com\",\n  \"password\": \"ironhack123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						},
+						"description": "Inicia sesión con email y password. Si las credenciales son correctas, el servidor establece una cookie httpOnly llamada 'sessionId' que Postman almacena automáticamente. A partir de este momento, todas las peticiones posteriores incluirán esa cookie. Ejecuta este request ANTES de probar cualquier endpoint protegido."
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Session cookie is set', function () {",
+									"    const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+									"    pm.expect(setCookieHeader).to.exist;",
+									"    pm.expect(setCookieHeader).to.include('sessionId');",
+									"});",
+									"",
+									"pm.test('Session cookie is httpOnly', function () {",
+									"    const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+									"    pm.expect(setCookieHeader.toLowerCase()).to.include('httponly');",
+									"});",
+									"",
+									"pm.test('Response contains user data', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Verify Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/verify",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "verify"]
+						},
+						"description": "Verifica que la sesión actual es válida. Devuelve el objeto del usuario autenticado. Útil para restaurar la sesión cuando se recarga la página en el frontend. Requiere que hayas hecho login previamente (la cookie sessionId debe estar presente)."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "logout"]
+						},
+						"description": "Cierra la sesión del usuario autenticado. Elimina la sesión de la base de datos y devuelve un 204 (sin contenido). Después de esta petición, la cookie sessionId ya no será válida y cualquier petición protegida devolverá 401."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"description": "Endpoints para ver y actualizar el perfil del usuario autenticado, incluyendo bio, fotos, preferencias y ubicación.",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["profile"]
+						},
+						"description": "Obtiene el perfil completo del usuario autenticado, incluyendo bio, fotos, preferencias, ubicación y arrays de likedUsers y passedUsers. Requiere sesión activa."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bio\": \"Full-stack developer in love with JavaScript\",\n  \"pics\": [\n    \"https://example.com/ada-pic1.jpg\",\n    \"https://example.com/ada-pic2.jpg\"\n  ],\n  \"preferences\": {\n    \"gender\": \"everyone\",\n    \"ageMin\": 22,\n    \"ageMax\": 35,\n    \"maxDistance\": 30\n  },\n  \"location\": {\n    \"type\": \"Point\",\n    \"coordinates\": [-3.7038, 40.4168]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["profile"]
+						},
+						"description": "Actualiza los campos del perfil del usuario autenticado. Todos los campos del body son opcionales: puedes enviar solo los que quieras modificar (bio, pics, preferences, location). Devuelve el objeto del usuario actualizado. Requiere sesión activa."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Suggestions",
+			"description": "Endpoint para obtener usuarios sugeridos según las preferencias del usuario autenticado.",
+			"item": [
+				{
+					"name": "Get Suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/suggestions",
+							"host": ["{{baseUrl}}"],
+							"path": ["suggestions"]
+						},
+						"description": "Devuelve una lista de usuarios sugeridos que cumplen los criterios de las preferencias del usuario autenticado: género compatible, dentro del rango de edad configurado, y que no hayan sido previamente dados like ni descartados. Requiere sesión activa. Importante: configura primero tus preferencias con PATCH /profile para que el filtrado funcione correctamente."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Likes & Passes",
+			"description": "Endpoints para dar like o descartar (pass) a otros usuarios. Cuando dos usuarios se dan like mutuamente, se crea un match.",
+			"item": [
+				{
+					"name": "Like User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/likes/{{targetUserId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["likes", "{{targetUserId}}"]
+						},
+						"description": "Da like al usuario indicado por targetUserId. Responde con { liked: true, match: false } si el otro usuario aún no te ha dado like. Responde con { liked: true, match: true, matchId: '...' } si el like es mutuo y se crea un match. Antes de ejecutar, copia el id del usuario objetivo desde la respuesta de GET /suggestions y pégalo en la variable targetUserId de la colección. Requiere sesión activa."
+					},
+					"response": []
+				},
+				{
+					"name": "Pass User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/pass/{{targetUserId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["pass", "{{targetUserId}}"]
+						},
+						"description": "Descarta al usuario indicado por targetUserId. Lo añade al array passedUsers del usuario autenticado, por lo que no volverá a aparecer en las sugerencias. Responde con { passed: true }. Antes de ejecutar, copia el id del usuario objetivo y pégalo en la variable targetUserId. Requiere sesión activa."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Matches",
+			"description": "Endpoint para obtener todos los matches del usuario autenticado.",
+			"item": [
+				{
+					"name": "Get Matches",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/matches",
+							"host": ["{{baseUrl}}"],
+							"path": ["matches"]
+						},
+						"description": "Devuelve un array con todos los matches del usuario autenticado. Cada match incluye los datos del otro usuario (nombre, fotos, bio) populados. Para que aparezcan matches, primero debes crear un like mutuo entre dos usuarios (ambos se dan like). Requiere sesión activa."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"description": "Endpoints para enviar y obtener mensajes dentro de un match. Solo los participantes del match pueden acceder a estos endpoints.",
+			"item": [
+				{
+					"name": "Get Messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/messages/{{matchId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["messages", "{{matchId}}"]
+						},
+						"description": "Obtiene todos los mensajes de un match específico, ordenados cronológicamente (del más antiguo al más reciente). El campo sender de cada mensaje viene populado con al menos el nombre y fotos del remitente. Antes de ejecutar, copia el matchId de la respuesta de GET /matches o del endpoint de Like (cuando se crea un match mutuo) y pégalo en la variable matchId. El servidor devuelve 403 si no eres participante del match. Requiere sesión activa."
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Hey! Nice to match with you! Are you also in the Ironhack bootcamp?\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/messages/{{matchId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["messages", "{{matchId}}"]
+						},
+						"description": "Envía un mensaje en la conversación de un match específico. El body debe contener un campo 'content' con el texto del mensaje. Devuelve el objeto del mensaje creado. El servidor verifica que el usuario autenticado es participante del match antes de permitir la operación (devuelve 403 si no lo es). Antes de ejecutar, asegúrate de que la variable matchId contiene un id de match válido. Requiere sesión activa."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

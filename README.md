@@ -25,7 +25,7 @@ Al completar este laboratorio seréis capaces de:
 - Node.js (v20 o superior)
 - MongoDB ejecutándose localmente (`mongod`)
 - Un editor de código (VS Code recomendado)
-- Postman o herramienta similar para probar la API
+- Postman o herramienta similar para probar la API (se incluye una colección lista para importar)
 - Dos miembros del equipo listos para hacer pair-programming
 
 ## Configuración inicial
@@ -48,6 +48,10 @@ npm run dev
 ```
 
 La configuración del frontend se cubre en la Iteración 5.
+
+### Colección Postman
+
+En la raíz del proyecto encontraréis el archivo `iron-tinder.postman_collection.json`. Importadlo en Postman para tener todas las peticiones de la API listas para probar. La colección usa la variable `{{baseUrl}}` (por defecto `http://localhost:3000/api`) y está organizada por recursos (Auth, Profile, Suggestions, etc.).
 
 ## Entrega
 
