@@ -1,118 +1,118 @@
 # Iron Tinder
 
-## Description
+## Descripción
 
-Build a full-stack dating application where Ironhack students can find their "iron love". Users sign up, set up their profile and preferences, browse through suggested profiles, and when two users like each other a match is created allowing them to exchange private messages.
+Construye una aplicación full-stack de citas donde los estudiantes de Ironhack puedan encontrar su "iron love". Los usuarios se registran, configuran su perfil y preferencias, navegan por perfiles sugeridos, y cuando dos usuarios se dan like mutuamente se crea un match que les permite intercambiar mensajes privados.
 
-This is a **pair-programming** project. You will build the complete **REST API first** (iterations 1-4), then the **React frontend** (iterations 5-7).
+Este es un proyecto de **pair-programming**. Construiréis primero la **API REST completa** (iteraciones 1-4) y después el **frontend con React** (iteraciones 5-7).
 
-## Learning Goals
+## Objetivos de aprendizaje
 
-After completing this lab you will be able to:
+Al completar este laboratorio seréis capaces de:
 
-- Design and implement a REST API with Express and Mongoose
-- Implement session-based authentication with cookies
-- Define Mongoose schemas with validations, references, and virtuals
-- Build filtered database queries based on user preferences
-- Implement a matching system with mutual like detection
-- Create a React frontend that consumes your own API
-- Manage authentication state with React Context
-- Build multi-page applications with React Router
-- Handle forms, API calls, and loading/error states in React
+- Diseñar e implementar una API REST con Express y Mongoose
+- Implementar autenticación basada en sesiones con cookies
+- Definir schemas de Mongoose con validaciones, referencias y virtuals
+- Construir consultas filtradas a la base de datos basadas en las preferencias del usuario
+- Implementar un sistema de matching con detección de likes mutuos
+- Crear un frontend en React que consuma vuestra propia API
+- Gestionar el estado de autenticación con React Context
+- Construir aplicaciones multipágina con React Router
+- Manejar formularios, llamadas a la API y estados de carga/error en React
 
-## Requirements
+## Requisitos
 
-- Node.js (v20 or higher)
-- MongoDB running locally (`mongod`)
-- A code editor (VS Code recommended)
-- Postman or similar tool for testing your API
-- Two team members ready to pair-program
+- Node.js (v20 o superior)
+- MongoDB ejecutándose localmente (`mongod`)
+- Un editor de código (VS Code recomendado)
+- Postman o herramienta similar para probar la API
+- Dos miembros del equipo listos para hacer pair-programming
 
-## Setup
+## Configuración inicial
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
+# Clonar el repositorio
+git clone <url-de-tu-repo>
 cd iron-tinder
 
-# Install server dependencies
+# Instalar dependencias del servidor
 cd server
 npm install
 
-# Copy environment variables and configure them
+# Copiar las variables de entorno y configurarlas
 cp .env.example .env
-# Edit .env with your values
+# Editar .env con vuestros valores
 
-# Start the server in development mode
+# Iniciar el servidor en modo desarrollo
 npm run dev
 ```
 
-The client setup is covered in Iteration 5.
+La configuración del cliente se cubre en la Iteración 5.
 
-## Submission
+## Entrega
 
-- Upon completion, create a Pull Request in your repository
-- Both team members must have commits in the repository
-- The API must be fully functional before starting the frontend
-- URL of your deployed application (if applicable)
+- Al finalizar, cread un Pull Request en vuestro repositorio
+- Ambos miembros del equipo deben tener commits en el repositorio
+- La API debe ser completamente funcional antes de empezar el frontend
+- URL de la aplicación desplegada (si aplica)
 
 ---
 
-## Data Models
+## Modelos de datos
 
 ### User
 
-| Field | Type | Details |
+| Campo | Tipo | Detalles |
 |---|---|---|
-| `email` | `String` | Required, unique, lowercase, trimmed, valid email format |
-| `password` | `String` | Required, hashed before saving (bcrypt) |
-| `name` | `String` | Required, trimmed |
-| `age` | `Number` | Required, minimum 18 |
-| `gender` | `String` | Required, enum: `"male"`, `"female"`, `"other"` |
-| `bio` | `String` | Trimmed, max 500 characters |
-| `pics` | `[String]` | Array of image URLs, at least 1 required |
+| `email` | `String` | Requerido, único, lowercase, trimmed, formato email válido |
+| `password` | `String` | Requerido, hasheado antes de guardar (bcrypt) |
+| `name` | `String` | Requerido, trimmed |
+| `age` | `Number` | Requerido, mínimo 18 |
+| `gender` | `String` | Requerido, enum: `"male"`, `"female"`, `"other"` |
+| `bio` | `String` | Trimmed, máximo 500 caracteres |
+| `pics` | `[String]` | Array de URLs de imágenes, mínimo 1 requerida |
 | `preferences.gender` | `String` | Enum: `"male"`, `"female"`, `"other"`, `"everyone"` |
-| `preferences.ageMin` | `Number` | Minimum age preference, default 18 |
-| `preferences.ageMax` | `Number` | Maximum age preference, default 99 |
-| `preferences.maxDistance` | `Number` | Maximum distance in km, default 50 |
-| `location` | `{ type: "Point", coordinates: [lng, lat] }` | GeoJSON Point for geolocation |
-| `likedUsers` | `[ObjectId]` | References to users this user has liked |
-| `passedUsers` | `[ObjectId]` | References to users this user has passed on |
-| `timestamps` | | Automatic `createdAt` and `updatedAt` |
+| `preferences.ageMin` | `Number` | Edad mínima preferida, por defecto 18 |
+| `preferences.ageMax` | `Number` | Edad máxima preferida, por defecto 99 |
+| `preferences.maxDistance` | `Number` | Distancia máxima en km, por defecto 50 |
+| `location` | `{ type: "Point", coordinates: [lng, lat] }` | GeoJSON Point para geolocalización |
+| `likedUsers` | `[ObjectId]` | Referencias a usuarios a los que se ha dado like |
+| `passedUsers` | `[ObjectId]` | Referencias a usuarios que se han descartado |
+| `timestamps` | | `createdAt` y `updatedAt` automáticos |
 
 ### Match
 
-| Field | Type | Details |
+| Campo | Tipo | Detalles |
 |---|---|---|
-| `users` | `[ObjectId]` | Array of exactly 2 User references |
-| `matchedAt` | `Date` | Defaults to `Date.now` |
-| `timestamps` | | Automatic `createdAt` and `updatedAt` |
+| `users` | `[ObjectId]` | Array de exactamente 2 referencias a User |
+| `matchedAt` | `Date` | Por defecto `Date.now` |
+| `timestamps` | | `createdAt` y `updatedAt` automáticos |
 
 ### Message
 
-| Field | Type | Details |
+| Campo | Tipo | Detalles |
 |---|---|---|
-| `sender` | `ObjectId` | Reference to User, required |
-| `match` | `ObjectId` | Reference to Match, required |
-| `content` | `String` | Required, trimmed |
-| `timestamps` | | Only `createdAt` (messages cannot be edited) |
+| `sender` | `ObjectId` | Referencia a User, requerido |
+| `match` | `ObjectId` | Referencia a Match, requerido |
+| `content` | `String` | Requerido, trimmed |
+| `timestamps` | | Solo `createdAt` (los mensajes no se pueden editar) |
 
 ---
 
-## API Endpoints
+## Endpoints de la API
 
-### Authentication
+### Autenticación
 
-| Method | Route | Description | Auth |
+| Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `POST` | `/api/auth/signup` | Register a new user | No |
-| `POST` | `/api/auth/login` | Log in and receive session cookie | No |
-| `DELETE` | `/api/auth/logout` | Log out (delete session) | Yes |
-| `GET` | `/api/auth/verify` | Verify current session is valid | Yes |
+| `POST` | `/api/auth/signup` | Registrar un nuevo usuario | No |
+| `POST` | `/api/auth/login` | Iniciar sesión y recibir cookie de sesión | No |
+| `DELETE` | `/api/auth/logout` | Cerrar sesión (eliminar sesión) | Sí |
+| `GET` | `/api/auth/verify` | Verificar que la sesión actual es válida | Sí |
 
 **POST /api/auth/signup**
 
-Request body:
+Cuerpo de la petición:
 ```json
 {
   "email": "ada@ironhack.com",
@@ -123,11 +123,11 @@ Request body:
 }
 ```
 
-Response: The created user object (without password).
+Respuesta: El objeto del usuario creado (sin password).
 
 **POST /api/auth/login**
 
-Request body:
+Cuerpo de la petición:
 ```json
 {
   "email": "ada@ironhack.com",
@@ -135,24 +135,24 @@ Request body:
 }
 ```
 
-Response: The user object. A `sessionId` cookie is set in the response.
+Respuesta: El objeto del usuario. Se establece una cookie `sessionId` en la respuesta.
 
 **GET /api/auth/verify**
 
-Response: The authenticated user object. Use this to restore the session on page reload.
+Respuesta: El objeto del usuario autenticado. Úsalo para restaurar la sesión al recargar la página.
 
 ---
 
-### Profile
+### Perfil
 
-| Method | Route | Description | Auth |
+| Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `GET` | `/api/profile` | Get the authenticated user's full profile | Yes |
-| `PATCH` | `/api/profile` | Update profile fields (bio, pics, preferences, location) | Yes |
+| `GET` | `/api/profile` | Obtener el perfil completo del usuario autenticado | Sí |
+| `PATCH` | `/api/profile` | Actualizar campos del perfil (bio, pics, preferencias, ubicación) | Sí |
 
 **PATCH /api/profile**
 
-Request body (all fields optional):
+Cuerpo de la petición (todos los campos son opcionales):
 ```json
 {
   "bio": "Full-stack developer in love with JavaScript",
@@ -170,39 +170,39 @@ Request body (all fields optional):
 }
 ```
 
-Response: The updated user object.
+Respuesta: El objeto del usuario actualizado.
 
 ---
 
-### Suggestions
+### Sugerencias
 
-| Method | Route | Description | Auth |
+| Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `GET` | `/api/suggestions` | Get a list of suggested users based on preferences | Yes |
+| `GET` | `/api/suggestions` | Obtener una lista de usuarios sugeridos según las preferencias | Sí |
 
-**How the suggestions algorithm works:**
+**Cómo funciona el algoritmo de sugerencias:**
 
-Return users that match ALL of the following criteria:
-1. The user is **not** the authenticated user
-2. The user has **not** already been liked or passed by the authenticated user
-3. The user's **gender** matches the authenticated user's gender preference (if preference is `"everyone"`, show all genders)
-4. The user's **age** is within the authenticated user's `ageMin` - `ageMax` range
-5. *(Optional)* The user is within `maxDistance` km (requires geolocation — skip this filter if the user has no location set)
+Devuelve usuarios que cumplan TODOS los siguientes criterios:
+1. El usuario **no** es el usuario autenticado
+2. El usuario **no** ha sido previamente dado like ni descartado por el usuario autenticado
+3. El **género** del usuario coincide con la preferencia de género del usuario autenticado (si la preferencia es `"everyone"`, mostrar todos los géneros)
+4. La **edad** del usuario está dentro del rango `ageMin` - `ageMax` del usuario autenticado
+5. *(Opcional)* El usuario está dentro de `maxDistance` km (requiere geolocalización — omitir este filtro si el usuario no tiene ubicación configurada)
 
-Response: Array of user objects (without password).
+Respuesta: Array de objetos de usuario (sin password).
 
 ---
 
-### Likes & Passes
+### Likes y Passes
 
-| Method | Route | Description | Auth |
+| Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `POST` | `/api/likes/:userId` | Like a user. Returns match info if mutual. | Yes |
-| `POST` | `/api/pass/:userId` | Pass on a user. | Yes |
+| `POST` | `/api/likes/:userId` | Dar like a un usuario. Devuelve info del match si es mutuo. | Sí |
+| `POST` | `/api/pass/:userId` | Descartar a un usuario. | Sí |
 
 **POST /api/likes/:userId**
 
-Response when **no match**:
+Respuesta cuando **no hay match**:
 ```json
 {
   "liked": true,
@@ -210,7 +210,7 @@ Response when **no match**:
 }
 ```
 
-Response when **match detected** (the other user had already liked you):
+Respuesta cuando **se detecta un match** (el otro usuario ya te había dado like):
 ```json
 {
   "liked": true,
@@ -219,16 +219,16 @@ Response when **match detected** (the other user had already liked you):
 }
 ```
 
-**How match detection works:**
+**Cómo funciona la detección de match:**
 
-When User A likes User B:
-1. Add User B's id to User A's `likedUsers` array
-2. Check if User B's `likedUsers` array already contains User A's id
-3. If yes, create a new Match document with both user ids and return `match: true`
+Cuando el Usuario A da like al Usuario B:
+1. Añadir el id del Usuario B al array `likedUsers` del Usuario A
+2. Comprobar si el array `likedUsers` del Usuario B ya contiene el id del Usuario A
+3. Si es así, crear un nuevo documento Match con ambos ids de usuario y devolver `match: true`
 
 **POST /api/pass/:userId**
 
-Response:
+Respuesta:
 ```json
 {
   "passed": true
@@ -239,202 +239,202 @@ Response:
 
 ### Matches
 
-| Method | Route | Description | Auth |
+| Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `GET` | `/api/matches` | Get all matches for the authenticated user | Yes |
+| `GET` | `/api/matches` | Obtener todos los matches del usuario autenticado | Sí |
 
-Response: Array of Match objects with populated user data. Each match includes the "other" user's profile info (name, pics, bio).
+Respuesta: Array de objetos Match con datos de usuario populados. Cada match incluye la info del perfil del "otro" usuario (nombre, fotos, bio).
 
 ---
 
-### Messages
+### Mensajes
 
-| Method | Route | Description | Auth |
+| Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `GET` | `/api/messages/:matchId` | Get all messages for a specific match | Yes |
-| `POST` | `/api/messages/:matchId` | Send a message in a match | Yes |
+| `GET` | `/api/messages/:matchId` | Obtener todos los mensajes de un match específico | Sí |
+| `POST` | `/api/messages/:matchId` | Enviar un mensaje en un match | Sí |
 
 **POST /api/messages/:matchId**
 
-Request body:
+Cuerpo de la petición:
 ```json
 {
   "content": "Hey! Nice to match with you!"
 }
 ```
 
-Response: The created message object.
+Respuesta: El objeto del mensaje creado.
 
 **GET /api/messages/:matchId**
 
-Response: Array of message objects sorted by `createdAt` ascending, with the `sender` field populated (at least name and pics).
+Respuesta: Array de objetos de mensaje ordenados por `createdAt` ascendente, con el campo `sender` populado (al menos nombre y fotos).
 
-**Important:** Before allowing message operations, verify that the authenticated user is a participant of the match.
+**Importante:** Antes de permitir operaciones de mensajes, verificar que el usuario autenticado es participante del match.
 
 ---
 
-## Frontend Pages & Components
+## Páginas y componentes del frontend
 
-You are free to design the UI however you like. Below is the list of required pages and components.
+Sois libres de diseñar la interfaz como queráis. A continuación se lista lo que es obligatorio implementar.
 
-### Pages
+### Páginas
 
-| Page | Route | Description |
+| Página | Ruta | Descripción |
 |---|---|---|
-| **Signup Page** | `/signup` | Registration form (email, password, name, age, gender) |
-| **Login Page** | `/login` | Login form (email, password) |
-| **Profile Page** | `/profile` | View and edit your profile (bio, pics, preferences, location) |
-| **Suggestions Page** | `/` | Main page showing user cards with Like / Pass buttons |
-| **Matches Page** | `/matches` | List of all your matches |
-| **Conversation Page** | `/matches/:matchId` | Chat view for a specific match |
+| **Signup Page** | `/signup` | Formulario de registro (email, password, nombre, edad, género) |
+| **Login Page** | `/login` | Formulario de login (email, password) |
+| **Profile Page** | `/profile` | Ver y editar tu perfil (bio, fotos, preferencias, ubicación) |
+| **Suggestions Page** | `/` | Página principal mostrando tarjetas de usuario con botones Like / Pass |
+| **Matches Page** | `/matches` | Lista de todos tus matches |
+| **Conversation Page** | `/matches/:matchId` | Vista de chat para un match específico |
 
-### Components
+### Componentes
 
-- **Navbar** — Navigation bar with links to Suggestions, Matches, Profile, and a Logout button
-- **UserCard** — Displays a suggested user's photo, name, age, bio with Like and Pass buttons
-- **MatchCard** — Displays a match's photo and name, links to the conversation
-- **MessageBubble** — Single message in a conversation, styled differently for sent vs received
-- **PrivateRoute** — Route wrapper that redirects to `/login` if not authenticated
+- **Navbar** — Barra de navegación con enlaces a Sugerencias, Matches, Perfil y un botón de Logout
+- **UserCard** — Muestra la foto, nombre, edad y bio de un usuario sugerido con botones de Like y Pass
+- **MatchCard** — Muestra la foto y nombre de un match, enlaza a la conversación
+- **MessageBubble** — Un mensaje individual en una conversación, con estilo diferente para enviados vs recibidos
+- **PrivateRoute** — Wrapper de ruta que redirige a `/login` si no hay sesión activa
 
 ### Contexts
 
-- **AuthContext** — Manages user authentication state, provides `user`, `login`, `signup`, `logout`, and `verify` functions
+- **AuthContext** — Gestiona el estado de autenticación, proporciona `user`, `login`, `signup`, `logout` y `verify`
 
 ### Services
 
-- **api-service.js** — Axios instance configured with `baseURL` and `withCredentials: true`, with functions for every API endpoint
+- **api-service.js** — Instancia de Axios configurada con `baseURL` y `withCredentials: true`, con funciones para cada endpoint de la API
 
 ---
 
-## Iterations
+## Iteraciones
 
 ---
 
-### Iteration 1 — Auth API (Backend)
+### Iteración 1 — Auth API (Backend)
 
-**Goal:** Implement user registration, login, session management, and authentication middleware.
+**Objetivo:** Implementar el registro de usuarios, login, gestión de sesiones y middleware de autenticación.
 
-**What to implement:**
+**Qué implementar:**
 
 1. **User Model** (`server/models/user.model.js`)
-   - Define the schema with fields: `email`, `password`, `name`, `age`, `gender`
-   - Add a `pre("save")` hook that hashes the password with bcrypt when it is modified
-   - Add a `checkPassword` instance method that compares a plain-text password with the stored hash
-   - Configure `toJSON` to remove `_id` and `password` from responses, and include virtuals
+   - Definir el schema con los campos: `email`, `password`, `name`, `age`, `gender`
+   - Añadir un hook `pre("save")` que hashee el password con bcrypt cuando se modifica
+   - Añadir un método de instancia `checkPassword` que compare un password en texto plano con el hash almacenado
+   - Configurar `toJSON` para eliminar `_id` y `password` de las respuestas e incluir virtuals
 
 2. **Session Model** (`server/models/session.model.js`)
-   - A simple model with a `user` field (ObjectId ref to User)
-   - Enable `timestamps`
+   - Un modelo simple con un campo `user` (ObjectId referencia a User)
+   - Habilitar `timestamps`
 
 3. **Auth Middleware** (`server/middlewares/auth.middleware.js`)
-   - Extract the `sessionId` from the request cookie header
-   - Find the session in the database and populate the user
-   - Attach the session to `req.session`
-   - If no valid session is found, respond with 401
-   - Skip authentication for public routes: `POST /api/auth/signup` and `POST /api/auth/login`
+   - Extraer el `sessionId` de la cookie en la cabecera de la petición
+   - Buscar la sesión en la base de datos y popular el usuario
+   - Adjuntar la sesión a `req.session`
+   - Si no se encuentra una sesión válida, responder con 401
+   - Omitir la autenticación para rutas públicas: `POST /api/auth/signup` y `POST /api/auth/login`
 
-4. **Auth Routes & Controller**
-   - `POST /api/auth/signup` — Validate input, create user, respond with user object
-   - `POST /api/auth/login` — Find user by email, verify password, create session, set `sessionId` cookie (`httpOnly: true`), respond with user
-   - `DELETE /api/auth/logout` — Delete the session from the database, respond with 204
-   - `GET /api/auth/verify` — Return `req.session.user` (the authenticated user)
+4. **Auth Routes y Controller**
+   - `POST /api/auth/signup` — Validar input, crear usuario, responder con el objeto del usuario
+   - `POST /api/auth/login` — Buscar usuario por email, verificar password, crear sesión, establecer cookie `sessionId` (`httpOnly: true`), responder con el usuario
+   - `DELETE /api/auth/logout` — Eliminar la sesión de la base de datos, responder con 204
+   - `GET /api/auth/verify` — Devolver `req.session.user` (el usuario autenticado)
 
-5. **App setup** (`server/app.js`)
-   - Configure Express with morgan, CORS, JSON parsing, clearBody middleware, auth middleware
-   - Mount routes under `/api`
-   - Add error handler middleware
+5. **Configuración de la app** (`server/app.js`)
+   - Configurar Express con morgan, CORS, JSON parsing, clearBody middleware, auth middleware
+   - Montar las rutas bajo `/api`
+   - Añadir middleware de manejo de errores
 
-**How to verify:**
+**Cómo verificar:**
 
-Use Postman to:
-- Sign up a new user and confirm the response does not include the password
-- Log in and check that a `sessionId` cookie is set
-- Call `GET /api/auth/verify` with the cookie and confirm it returns the user
-- Call any protected route without a cookie and confirm you get a 401
+Usa Postman para:
+- Registrar un nuevo usuario y confirmar que la respuesta no incluye el password
+- Hacer login y comprobar que se establece una cookie `sessionId`
+- Llamar a `GET /api/auth/verify` con la cookie y confirmar que devuelve el usuario
+- Llamar a cualquier ruta protegida sin cookie y confirmar que recibes un 401
 
 <details>
-<summary>Hints</summary>
+<summary>Pistas</summary>
 
-- Use `req.headers.cookie?.match(/sessionId=([^;]+)/)?.[1]` to extract the session id from the cookie header
-- Remember to use `httpOnly: true` when setting the cookie so JavaScript cannot access it (XSS protection)
-- The `clearBody` middleware should delete `_id`, `createdAt`, and `updatedAt` from `req.body` to prevent clients from setting these fields
-- Use `http-errors` to create HTTP errors: `throw createHttpError(401, "unauthorized")`
-- Express 5 handles async errors automatically, no need for try/catch in route handlers
+- Usa `req.headers.cookie?.match(/sessionId=([^;]+)/)?.[1]` para extraer el id de sesión de la cabecera de cookies
+- Recuerda usar `httpOnly: true` al establecer la cookie para que JavaScript no pueda acceder a ella (protección contra XSS)
+- El middleware `clearBody` debe eliminar `_id`, `createdAt` y `updatedAt` de `req.body` para evitar que los clientes establezcan estos campos
+- Usa `http-errors` para crear errores HTTP: `throw createHttpError(401, "unauthorized")`
+- Express 5 maneja los errores asíncronos automáticamente, no necesitas try/catch en los route handlers
 
 </details>
 
 ---
 
-### Iteration 2 — Profile & Preferences API (Backend)
+### Iteración 2 — Profile & Preferences API (Backend)
 
-**Goal:** Allow authenticated users to view and update their profile, including preferences and location.
+**Objetivo:** Permitir a los usuarios autenticados ver y actualizar su perfil, incluyendo preferencias y ubicación.
 
-**What to implement:**
+**Qué implementar:**
 
-1. **Extend the User Model**
-   - Add the remaining fields: `bio`, `pics`, `preferences` (nested object with `gender`, `ageMin`, `ageMax`, `maxDistance`), `location` (GeoJSON Point), `likedUsers`, `passedUsers`
-   - Add a `2dsphere` index on the `location` field if you plan to support distance-based filtering
+1. **Ampliar el User Model**
+   - Añadir los campos restantes: `bio`, `pics`, `preferences` (objeto anidado con `gender`, `ageMin`, `ageMax`, `maxDistance`), `location` (GeoJSON Point), `likedUsers`, `passedUsers`
+   - Añadir un índice `2dsphere` en el campo `location` si planeáis soportar filtrado por distancia
 
-2. **Profile Routes & Controller**
-   - `GET /api/profile` — Return the authenticated user's full profile
-   - `PATCH /api/profile` — Update profile fields from `req.body`, save, and return the updated user
+2. **Profile Routes y Controller**
+   - `GET /api/profile` — Devolver el perfil completo del usuario autenticado
+   - `PATCH /api/profile` — Actualizar campos del perfil desde `req.body`, guardar y devolver el usuario actualizado
 
-**How to verify:**
+**Cómo verificar:**
 
-Use Postman to:
-- Update your profile with bio, pics, preferences, and location
-- Retrieve your profile and confirm all fields are saved correctly
-- Try sending invalid data (e.g., age below 18, invalid gender enum) and confirm validation errors are returned
+Usa Postman para:
+- Actualizar tu perfil con bio, fotos, preferencias y ubicación
+- Obtener tu perfil y confirmar que todos los campos se han guardado correctamente
+- Enviar datos inválidos (ej: edad menor de 18, enum de género inválido) y confirmar que se devuelven errores de validación
 
 <details>
-<summary>Hints</summary>
+<summary>Pistas</summary>
 
-- Use `Object.assign(req.session.user, req.body)` to merge the update fields, then `await req.session.user.save()` to persist and run validations
-- For the GeoJSON location, the schema should look like: `location: { type: { type: String, enum: ["Point"] }, coordinates: [Number] }`
-- Create a `2dsphere` index: `userSchema.index({ location: "2dsphere" })`
-- Remember to delete protected fields in `clearBody` middleware — or handle it in the controller
+- Usa `Object.assign(req.session.user, req.body)` para fusionar los campos de actualización, luego `await req.session.user.save()` para persistir y ejecutar validaciones
+- Para la ubicación GeoJSON, el schema debería verse así: `location: { type: { type: String, enum: ["Point"] }, coordinates: [Number] }`
+- Crear un índice `2dsphere`: `userSchema.index({ location: "2dsphere" })`
+- Recuerda eliminar campos protegidos en el middleware `clearBody` — o manejarlo en el controller
 
 </details>
 
 ---
 
-### Iteration 3 — Suggestions & Matching API (Backend)
+### Iteración 3 — Suggestions & Matching API (Backend)
 
-**Goal:** Implement the discovery system where users see suggested profiles, and the like/pass/match logic.
+**Objetivo:** Implementar el sistema de descubrimiento donde los usuarios ven perfiles sugeridos, y la lógica de like/pass/match.
 
-**What to implement:**
+**Qué implementar:**
 
-1. **Suggestions Route & Controller**
-   - `GET /api/suggestions` — Build a MongoDB query that filters users based on the authenticated user's preferences
-   - Exclude: the authenticated user themselves, users already in `likedUsers`, users already in `passedUsers`
-   - Filter by: gender preference, age range
-   - Return the filtered list of users
+1. **Suggestions Route y Controller**
+   - `GET /api/suggestions` — Construir una consulta MongoDB que filtre usuarios según las preferencias del usuario autenticado
+   - Excluir: el propio usuario autenticado, usuarios ya en `likedUsers`, usuarios ya en `passedUsers`
+   - Filtrar por: preferencia de género, rango de edad
+   - Devolver la lista filtrada de usuarios
 
-2. **Like Route & Controller**
-   - `POST /api/likes/:userId` — Add the target user to `likedUsers`. Then check if the target user has already liked the authenticated user (check their `likedUsers` array). If mutual, create a Match document and return match info.
+2. **Like Route y Controller**
+   - `POST /api/likes/:userId` — Añadir el usuario objetivo a `likedUsers`. Después comprobar si el usuario objetivo ya ha dado like al usuario autenticado (verificar su array `likedUsers`). Si es mutuo, crear un documento Match y devolver la info del match.
 
-3. **Pass Route & Controller**
-   - `POST /api/pass/:userId` — Add the target user to `passedUsers`
+3. **Pass Route y Controller**
+   - `POST /api/pass/:userId` — Añadir el usuario objetivo a `passedUsers`
 
 4. **Match Model** (`server/models/match.model.js`)
-   - Define the schema with `users` (array of 2 ObjectId refs) and `matchedAt`
+   - Definir el schema con `users` (array de 2 ObjectId refs) y `matchedAt`
 
-5. **Matches Route & Controller**
-   - `GET /api/matches` — Find all matches where the authenticated user is in the `users` array. Populate the user data.
+5. **Matches Route y Controller**
+   - `GET /api/matches` — Buscar todos los matches donde el usuario autenticado esté en el array `users`. Popular los datos de usuario.
 
-**How to verify:**
+**Cómo verificar:**
 
-You will need at least 2-3 test users to verify this properly.
+Necesitaréis al menos 2-3 usuarios de prueba para verificar esto correctamente.
 
-- Create multiple users with different genders and ages
-- Set preferences on one user and call `GET /api/suggestions` — verify the results respect the filters
-- Like a user from User A, then log in as User B and like User A back — verify a match is created
-- Call `GET /api/matches` and confirm the match appears for both users
+- Crear múltiples usuarios con diferentes géneros y edades
+- Establecer preferencias en un usuario y llamar a `GET /api/suggestions` — verificar que los resultados respetan los filtros
+- Dar like a un usuario desde el Usuario A, luego iniciar sesión como Usuario B y dar like al Usuario A — verificar que se crea un match
+- Llamar a `GET /api/matches` y confirmar que el match aparece para ambos usuarios
 
 <details>
-<summary>Hints</summary>
+<summary>Pistas</summary>
 
-- Build the suggestions query criteria step by step:
+- Construir los criterios de la consulta de sugerencias paso a paso:
   ```javascript
   const criteria = {
     _id: { $ne: user.id, $nin: [...user.likedUsers, ...user.passedUsers] },
@@ -444,42 +444,42 @@ You will need at least 2-3 test users to verify this properly.
     criteria.gender = user.preferences.gender;
   }
   ```
-- To check for a mutual like, find the target user and check: `targetUser.likedUsers.includes(currentUser.id)`
-- Use `$addToSet` instead of `$push` to avoid duplicates when adding to `likedUsers` or `passedUsers`
-- For matches query: `Match.find({ users: userId }).populate("users")`
+- Para comprobar un like mutuo, buscar el usuario objetivo y verificar: `targetUser.likedUsers.includes(currentUser.id)`
+- Usar `$addToSet` en lugar de `$push` para evitar duplicados al añadir a `likedUsers` o `passedUsers`
+- Para la consulta de matches: `Match.find({ users: userId }).populate("users")`
 
 </details>
 
 ---
 
-### Iteration 4 — Messaging API (Backend)
+### Iteración 4 — Messaging API (Backend)
 
-**Goal:** Implement private messaging between matched users.
+**Objetivo:** Implementar mensajería privada entre usuarios que han hecho match.
 
-**What to implement:**
+**Qué implementar:**
 
 1. **Message Model** (`server/models/message.model.js`)
-   - Define the schema with `sender` (User ref), `match` (Match ref), `content` (String)
-   - Only enable `createdAt` timestamp (messages are immutable)
+   - Definir el schema con `sender` (User ref), `match` (Match ref), `content` (String)
+   - Solo habilitar el timestamp `createdAt` (los mensajes son inmutables)
 
-2. **Message Routes & Controller**
-   - `POST /api/messages/:matchId` — Create a new message. Verify the authenticated user is a participant of the match before allowing the operation.
-   - `GET /api/messages/:matchId` — Return all messages for the match, sorted by `createdAt` ascending, with the `sender` populated.
+2. **Message Routes y Controller**
+   - `POST /api/messages/:matchId` — Crear un nuevo mensaje. Verificar que el usuario autenticado es participante del match antes de permitir la operación.
+   - `GET /api/messages/:matchId` — Devolver todos los mensajes del match, ordenados por `createdAt` ascendente, con el `sender` populado.
 
-3. **Security check** — Before any message operation, verify that `req.session.user` is one of the users in the match. If not, respond with 403.
+3. **Verificación de seguridad** — Antes de cualquier operación de mensajes, verificar que `req.session.user` es uno de los usuarios del match. Si no, responder con 403.
 
-**How to verify:**
+**Cómo verificar:**
 
-- Create a match between two users (from Iteration 3)
-- Send a message from User A in the match
-- Send a message from User B in the match
-- Retrieve the conversation and verify messages appear in order
-- Try to send a message in a match you are not part of — confirm you get 403
+- Crear un match entre dos usuarios (de la Iteración 3)
+- Enviar un mensaje desde el Usuario A en el match
+- Enviar un mensaje desde el Usuario B en el match
+- Obtener la conversación y verificar que los mensajes aparecen en orden
+- Intentar enviar un mensaje en un match del que no formas parte — confirmar que recibes 403
 
 <details>
-<summary>Hints</summary>
+<summary>Pistas</summary>
 
-- To verify match participation:
+- Para verificar la participación en el match:
   ```javascript
   const match = await Match.findById(req.params.matchId);
   const isParticipant = match.users.some(
@@ -487,20 +487,20 @@ You will need at least 2-3 test users to verify this properly.
   );
   if (!isParticipant) throw createHttpError(403, "Not your match");
   ```
-- Sort messages chronologically: `Message.find({ match: matchId }).sort({ createdAt: 1 }).populate("sender")`
-- Consider adding a virtual on the Match model to easily access its messages
+- Ordenar mensajes cronológicamente: `Message.find({ match: matchId }).sort({ createdAt: 1 }).populate("sender")`
+- Considerar añadir un virtual en el modelo Match para acceder fácilmente a sus mensajes
 
 </details>
 
 ---
 
-### Iteration 5 — Auth & Profile Pages (Frontend)
+### Iteración 5 — Auth & Profile Pages (Frontend)
 
-**Goal:** Set up the React application and build the authentication and profile pages.
+**Objetivo:** Configurar la aplicación React y construir las páginas de autenticación y perfil.
 
-**What to implement:**
+**Qué implementar:**
 
-1. **Project setup**
+1. **Configuración del proyecto**
    ```bash
    cd client
    npm install
@@ -508,39 +508,39 @@ You will need at least 2-3 test users to verify this properly.
    ```
 
 2. **API Service** (`src/services/api-service.js`)
-   - Create an Axios instance with `baseURL` pointing to your API and `withCredentials: true`
-   - Add a response interceptor that unwraps `response.data`
-   - Create functions for every API endpoint (signup, login, logout, verify, getProfile, updateProfile, etc.)
+   - Crear una instancia de Axios con `baseURL` apuntando a vuestra API y `withCredentials: true`
+   - Añadir un interceptor de respuesta que desenvuelva `response.data`
+   - Crear funciones para cada endpoint de la API (signup, login, logout, verify, getProfile, updateProfile, etc.)
 
 3. **Auth Context** (`src/contexts/auth-context.jsx`)
-   - On mount, call `verify()` to check for an existing session
-   - If no session, redirect to `/login`
-   - Provide `user`, `login`, `signup`, `logout` through context
-   - While verifying, render nothing to avoid content flash
+   - Al montar, llamar a `verify()` para comprobar si existe una sesión activa
+   - Si no hay sesión, redirigir a `/login`
+   - Proporcionar `user`, `login`, `signup`, `logout` a través del contexto
+   - Mientras se verifica, no renderizar nada para evitar un flash de contenido
 
-4. **Pages**
-   - **Signup Page** — Form with email, password, name, age, gender fields. On submit, call signup and redirect to `/login`
-   - **Login Page** — Form with email and password. On submit, call login and redirect to `/`
-   - **Profile Page** — Display current profile data in a form. Allow editing bio, pics (URLs), preferences, and location. On submit, call updateProfile
+4. **Páginas**
+   - **Signup Page** — Formulario con campos de email, password, nombre, edad, género. Al enviar, llamar a signup y redirigir a `/login`
+   - **Login Page** — Formulario con email y password. Al enviar, llamar a login y redirigir a `/`
+   - **Profile Page** — Mostrar los datos actuales del perfil en un formulario. Permitir editar bio, fotos (URLs), preferencias y ubicación. Al enviar, llamar a updateProfile
 
 5. **Routing** (`src/App.jsx`)
-   - Set up React Router with routes for `/signup`, `/login`, `/profile`, and `/` (suggestions, built in next iteration)
-   - Public routes: `/signup`, `/login`
-   - Protected routes: everything else (use AuthContext to redirect)
+   - Configurar React Router con rutas para `/signup`, `/login`, `/profile` y `/` (sugerencias, se construye en la siguiente iteración)
+   - Rutas públicas: `/signup`, `/login`
+   - Rutas protegidas: todo lo demás (usar AuthContext para redirigir)
 
-6. **Navbar** — Links to home (`/`), matches (`/matches`), profile (`/profile`), and a logout button
+6. **Navbar** — Enlaces a inicio (`/`), matches (`/matches`), perfil (`/profile`), y un botón de logout
 
-**How to verify:**
+**Cómo verificar:**
 
-- Sign up a new user through the frontend form
-- Log in and verify you are redirected to the home page
-- Refresh the page and verify your session is restored (no redirect to login)
-- Go to Profile, update your bio and preferences, and verify the changes persist
+- Registrar un nuevo usuario a través del formulario del frontend
+- Hacer login y verificar que se redirige a la página principal
+- Recargar la página y verificar que la sesión se restaura (no redirige a login)
+- Ir a Perfil, actualizar bio y preferencias, y verificar que los cambios persisten
 
 <details>
-<summary>Hints</summary>
+<summary>Pistas</summary>
 
-- The API service pattern from the reference project:
+- El patrón del API service:
   ```javascript
   const http = axios.create({
     baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
@@ -551,88 +551,88 @@ You will need at least 2-3 test users to verify this properly.
     (error) => Promise.reject(error),
   );
   ```
-- Use `react-hook-form` for form handling — it simplifies validation and submit state
-- In the AuthContext, use `useNavigate` and `useLocation` from React Router
-- Remember to wrap `<App />` with `<BrowserRouter>` and `<AuthContextProvider>` in `main.jsx`
+- Usa `react-hook-form` para manejar formularios — simplifica la validación y el estado de envío
+- En el AuthContext, usa `useNavigate` y `useLocation` de React Router
+- Recuerda envolver `<App />` con `<BrowserRouter>` y `<AuthContextProvider>` en `main.jsx`
 
 </details>
 
 ---
 
-### Iteration 6 — Discovery & Matching Pages (Frontend)
+### Iteración 6 — Discovery & Matching Pages (Frontend)
 
-**Goal:** Build the main suggestions page and the matches list.
+**Objetivo:** Construir la página principal de sugerencias y la lista de matches.
 
-**What to implement:**
+**Qué implementar:**
 
-1. **Suggestions Page** (home `/`)
-   - Fetch suggestions from `GET /api/suggestions`
-   - Display one user at a time as a card (or display all — your choice)
-   - Each card shows: main photo, name, age, bio
-   - Two buttons: **Like** and **Pass**
-   - On Like, call `POST /api/likes/:userId` — if a match is returned, show a notification or modal
-   - On Pass, call `POST /api/pass/:userId`
-   - After like/pass, show the next suggestion
-   - Handle the case when there are no more suggestions
+1. **Suggestions Page** (inicio `/`)
+   - Obtener sugerencias de `GET /api/suggestions`
+   - Mostrar un usuario a la vez como tarjeta (o mostrar todos — a vuestra elección)
+   - Cada tarjeta muestra: foto principal, nombre, edad, bio
+   - Dos botones: **Like** y **Pass**
+   - Al dar Like, llamar a `POST /api/likes/:userId` — si se devuelve un match, mostrar una notificación o modal
+   - Al dar Pass, llamar a `POST /api/pass/:userId`
+   - Después de like/pass, mostrar la siguiente sugerencia
+   - Manejar el caso de cuando no quedan más sugerencias
 
 2. **Matches Page** (`/matches`)
-   - Fetch matches from `GET /api/matches`
-   - Display each match as a card with the other user's photo and name
-   - Each card links to the conversation: `/matches/:matchId`
+   - Obtener matches de `GET /api/matches`
+   - Mostrar cada match como una tarjeta con la foto y nombre del otro usuario
+   - Cada tarjeta enlaza a la conversación: `/matches/:matchId`
 
-**How to verify:**
+**Cómo verificar:**
 
-- Log in and see suggestions on the home page
-- Like and pass users, verify they don't reappear
-- Like a user who has liked you back — verify the match notification
-- Go to Matches page and verify the match appears
-- Click on a match to navigate to the conversation page (built in next iteration)
+- Iniciar sesión y ver sugerencias en la página principal
+- Dar like y pass a usuarios, verificar que no vuelven a aparecer
+- Dar like a un usuario que ya te ha dado like — verificar la notificación de match
+- Ir a la página de Matches y verificar que aparece el match
+- Hacer clic en un match para navegar a la página de conversación (se construye en la siguiente iteración)
 
 <details>
-<summary>Hints</summary>
+<summary>Pistas</summary>
 
-- Keep the suggestions in React state. When a user is liked or passed, remove them from the state array
-- To show one card at a time, keep a `currentIndex` in state and increment it after each action
-- The match response from the Like endpoint tells you if a match was created — use this to show a celebration or notification
-- On the matches page, you need to figure out which user in `match.users` is the "other" user (not you). Compare with the authenticated user's id from AuthContext
+- Mantener las sugerencias en el estado de React. Cuando se da like o pass a un usuario, eliminarlo del array del estado
+- Para mostrar una tarjeta a la vez, mantener un `currentIndex` en el estado e incrementarlo después de cada acción
+- La respuesta del match desde el endpoint de Like te dice si se creó un match — usa esto para mostrar una celebración o notificación
+- En la página de matches, necesitáis averiguar qué usuario en `match.users` es el "otro" usuario (no tú). Comparar con el id del usuario autenticado del AuthContext
 
 </details>
 
 ---
 
-### Iteration 7 — Messaging & Polish (Frontend)
+### Iteración 7 — Messaging & Polish (Frontend)
 
-**Goal:** Build the conversation view, connect everything, and do final testing.
+**Objetivo:** Construir la vista de conversación, conectar todo y hacer las pruebas finales.
 
-**What to implement:**
+**Qué implementar:**
 
 1. **Conversation Page** (`/matches/:matchId`)
-   - Fetch messages from `GET /api/messages/:matchId`
-   - Display messages in chronological order
-   - Style messages differently based on whether the sender is the authenticated user
-   - Add a message input form at the bottom
-   - On submit, call `POST /api/messages/:matchId` and add the new message to the list
-   - Consider polling for new messages every few seconds (simple `setInterval` with a fetch)
+   - Obtener mensajes de `GET /api/messages/:matchId`
+   - Mostrar mensajes en orden cronológico
+   - Estilizar los mensajes de forma diferente según si el remitente es el usuario autenticado
+   - Añadir un formulario de input de mensaje en la parte inferior
+   - Al enviar, llamar a `POST /api/messages/:matchId` y añadir el nuevo mensaje a la lista
+   - Considerar hacer polling de nuevos mensajes cada pocos segundos (un simple `setInterval` con un fetch)
 
-2. **Polish & Testing**
-   - Test the complete flow: signup, login, set profile, browse suggestions, like/pass, match, message
-   - Handle loading states (show a spinner while data is loading)
-   - Handle error states (show error messages when API calls fail)
-   - Handle empty states (no suggestions left, no matches yet, no messages yet)
-   - Verify that the app works with two different browser sessions (or one regular + one incognito window)
+2. **Pulido y pruebas**
+   - Probar el flujo completo: registro, login, configurar perfil, navegar sugerencias, like/pass, match, mensaje
+   - Manejar estados de carga (mostrar un spinner mientras se cargan los datos)
+   - Manejar estados de error (mostrar mensajes de error cuando fallan las llamadas a la API)
+   - Manejar estados vacíos (no quedan sugerencias, no hay matches todavía, no hay mensajes todavía)
+   - Verificar que la app funciona con dos sesiones de navegador diferentes (o una normal + una ventana de incógnito)
 
-**How to verify:**
+**Cómo verificar:**
 
-- Open two browser windows logged in as different users
-- Like each other to create a match
-- Send messages back and forth
-- Verify messages appear in correct order
-- Test the full flow from signup to messaging
+- Abrir dos ventanas del navegador con sesión iniciada como usuarios diferentes
+- Daros like mutuamente para crear un match
+- Enviar mensajes de ida y vuelta
+- Verificar que los mensajes aparecen en el orden correcto
+- Probar el flujo completo desde el registro hasta la mensajería
 
 <details>
-<summary>Hints</summary>
+<summary>Pistas</summary>
 
-- For polling new messages, you can use a `useEffect` with `setInterval`:
+- Para hacer polling de nuevos mensajes, puedes usar un `useEffect` con `setInterval`:
   ```javascript
   useEffect(() => {
     const interval = setInterval(() => {
@@ -641,22 +641,22 @@ You will need at least 2-3 test users to verify this properly.
     return () => clearInterval(interval);
   }, [matchId]);
   ```
-- Style sent messages on the right and received messages on the left (like any chat app)
-- Scroll to the bottom of the messages list when new messages arrive
-- Use a ref on the messages container: `messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })`
+- Estilizar los mensajes enviados a la derecha y los recibidos a la izquierda (como cualquier app de chat)
+- Hacer scroll hasta el final de la lista de mensajes cuando lleguen nuevos mensajes
+- Usar un ref en el contenedor de mensajes: `messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })`
 
 </details>
 
 ---
 
-## Pair Programming Tips
+## Consejos para el pair-programming
 
-- **Switch the driver every 30-45 minutes.** The driver writes code, the navigator reviews and thinks ahead.
-- **Communicate constantly.** Talk through your decisions out loud before writing code.
-- **Plan before coding.** At the start of each iteration, discuss the approach before touching the keyboard.
-- **Commit often.** Make small, meaningful commits at the end of each sub-task within an iteration.
-- **Both partners must understand every line.** If one person does not understand something, stop and explain.
-- **Use branches.** Work on a feature branch for each iteration and merge to `main` when the iteration is complete.
+- **Cambiad de driver cada 30-45 minutos.** El driver escribe código, el navigator revisa y piensa en los siguientes pasos.
+- **Comunicaos constantemente.** Hablad sobre vuestras decisiones en voz alta antes de escribir código.
+- **Planificad antes de codear.** Al inicio de cada iteración, discutid el enfoque antes de tocar el teclado.
+- **Haced commits frecuentes.** Haced commits pequeños y significativos al final de cada sub-tarea dentro de una iteración.
+- **Ambos miembros deben entender cada línea.** Si uno no entiende algo, parad y explicad.
+- **Usad ramas.** Trabajad en una feature branch para cada iteración y haced merge a `main` cuando la iteración esté completa.
 
 ---
 
