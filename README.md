@@ -35,8 +35,8 @@ Al completar este laboratorio seréis capaces de:
 git clone <url-de-tu-repo>
 cd iron-tinder
 
-# Instalar dependencias del servidor
-cd server
+# Instalar dependencias de la API
+cd api
 npm install
 
 # Copiar las variables de entorno y configurarlas
@@ -47,7 +47,7 @@ cp .env.example .env
 npm run dev
 ```
 
-La configuración del cliente se cubre en la Iteración 5.
+La configuración del frontend se cubre en la Iteración 5.
 
 ## Entrega
 
@@ -316,17 +316,17 @@ Sois libres de diseñar la interfaz como queráis. A continuación se lista lo q
 
 **Qué implementar:**
 
-1. **User Model** (`server/models/user.model.js`)
+1. **User Model** (`api/models/user.model.js`)
    - Definir el schema con los campos: `email`, `password`, `name`, `age`, `gender`
    - Añadir un hook `pre("save")` que hashee el password con bcrypt cuando se modifica
    - Añadir un método de instancia `checkPassword` que compare un password en texto plano con el hash almacenado
    - Configurar `toJSON` para eliminar `_id` y `password` de las respuestas e incluir virtuals
 
-2. **Session Model** (`server/models/session.model.js`)
+2. **Session Model** (`api/models/session.model.js`)
    - Un modelo simple con un campo `user` (ObjectId referencia a User)
    - Habilitar `timestamps`
 
-3. **Auth Middleware** (`server/middlewares/auth.middleware.js`)
+3. **Auth Middleware** (`api/middlewares/auth.middleware.js`)
    - Extraer el `sessionId` de la cookie en la cabecera de la petición
    - Buscar la sesión en la base de datos y popular el usuario
    - Adjuntar la sesión a `req.session`
@@ -339,7 +339,7 @@ Sois libres de diseñar la interfaz como queráis. A continuación se lista lo q
    - `DELETE /api/auth/logout` — Eliminar la sesión de la base de datos, responder con 204
    - `GET /api/auth/verify` — Devolver `req.session.user` (el usuario autenticado)
 
-5. **Configuración de la app** (`server/app.js`)
+5. **Configuración de la app** (`api/app.js`)
    - Configurar Express con morgan, CORS, JSON parsing, clearBody middleware, auth middleware
    - Montar las rutas bajo `/api`
    - Añadir middleware de manejo de errores
@@ -416,7 +416,7 @@ Usa Postman para:
 3. **Pass Route y Controller**
    - `POST /api/pass/:userId` — Añadir el usuario objetivo a `passedUsers`
 
-4. **Match Model** (`server/models/match.model.js`)
+4. **Match Model** (`api/models/match.model.js`)
    - Definir el schema con `users` (array de 2 ObjectId refs) y `matchedAt`
 
 5. **Matches Route y Controller**
@@ -458,7 +458,7 @@ Necesitaréis al menos 2-3 usuarios de prueba para verificar esto correctamente.
 
 **Qué implementar:**
 
-1. **Message Model** (`server/models/message.model.js`)
+1. **Message Model** (`api/models/message.model.js`)
    - Definir el schema con `sender` (User ref), `match` (Match ref), `content` (String)
    - Solo habilitar el timestamp `createdAt` (los mensajes son inmutables)
 
@@ -502,7 +502,7 @@ Necesitaréis al menos 2-3 usuarios de prueba para verificar esto correctamente.
 
 1. **Configuración del proyecto**
    ```bash
-   cd client
+   cd web
    npm install
    npm run dev
    ```

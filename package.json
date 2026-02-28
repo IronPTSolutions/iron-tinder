@@ -4,7 +4,7 @@
   "private": true,
   "description": "Iron Tinder - Full Stack Dating App Lab",
   "scripts": {
-    "server": "npm run dev --prefix server",
-    "client": "npm run dev --prefix client"
+    "api": "npm run dev --prefix api",
+    "web": "npm run dev --prefix web"
   }
 }
